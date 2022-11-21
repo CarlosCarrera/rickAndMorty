@@ -8,7 +8,6 @@
 import SwiftUI
 
 protocol CharacterDetailVMInterface: ObservableObject {
-    func getCharacter()
     var characterResult: CharacterVM { get set }
 }
 
@@ -16,12 +15,6 @@ struct CharacterDetailView<VM>: View where VM: CharacterDetailVMInterface  {
     @ObservedObject var viewModel: VM
     
     var body: some View {
-        ZStack {
-            Image("background")
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
-            
             VStack(spacing: 16) {
                 CharacterListCellView(viewModel: viewModel.characterResult)
                     .border(.black, width: 4)
@@ -45,11 +38,13 @@ struct CharacterDetailView<VM>: View where VM: CharacterDetailVMInterface  {
                 .background(Color.white)
             }
             .padding(24)
-        }
-        .onAppear{
-            viewModel.getCharacter()
-        }
-        
+            .background {
+                Image("background")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+            }
+            
     }
 }
 

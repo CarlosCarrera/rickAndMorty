@@ -18,12 +18,9 @@ protocol PaginatedDataRepositoryInterface  {
 
 struct CharactersService: CharactersServiceInterface {
     let repository: PaginatedDataRepositoryInterface
-    let database: DataManagerInterface
     
-    init(repository: PaginatedDataRepositoryInterface = PaginatedDataRepository(),
-         database: DataManagerInterface = DatabaseManager.shared) {
+    init(repository: PaginatedDataRepositoryInterface = PaginatedDataRepository()) {
         self.repository = repository
-        self.database = database
     }
     
     func getCharacters(page: Int) async throws -> [Character] {
@@ -32,7 +29,6 @@ struct CharactersService: CharactersServiceInterface {
         }
         
         let paginatedResult = try await repository.fetchData(url: url, page: page)
-        try await database.saveCharacters(characters: paginatedResult.results)
         return paginatedResult.results.map { Character(from: $0) }
     }
 }

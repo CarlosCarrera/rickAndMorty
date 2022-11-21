@@ -8,7 +8,6 @@
 import Foundation
 
 enum API {
-    case character(id: Int)
     case characters
     
     private var baseUrl: String {
@@ -19,8 +18,6 @@ enum API {
         switch self {
         case .characters:
             return URL(string: baseUrl + "/character")
-        case .character(let id):
-            return URL(string: baseUrl + "/character/\(id)")
         }
     }
 }

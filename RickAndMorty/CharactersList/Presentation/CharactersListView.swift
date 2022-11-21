@@ -21,36 +21,35 @@ struct CharactersListView<VM>: View where VM: CharactersListVMInterface {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            ScrollView(.vertical, showsIndicators: false) {
+                LazyVGrid(columns: [
+                    GridItem(.flexible(), spacing: 20),
+                    GridItem(.flexible(), spacing: 20)
+                ], spacing: 20) {
+                    ForEach(viewModel.charactersResult, id: \.id) { character in
+                        NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailVM(character: character))) {
+                            CharacterListCellView(viewModel: character)
+                        }
+                    }
+                    if !viewModel.charactersResult.isEmpty {
+                        ProgressView()
+                            .onAppear {
+                                viewModel.getCharacters()
+                            }
+                    }
+                }
+                .padding(EdgeInsets(top: 0, leading: 20 , bottom: 0, trailing: 20))
+                .navigationDestination(for: Color.self) { color in
+                }
+            }
+            .background {
                 Image("background")
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                
-                ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.flexible(), spacing: 20),
-                        GridItem(.flexible(), spacing: 20)
-                    ], spacing: 20) {
-                        ForEach(viewModel.charactersResult, id: \.id) { character in
-                            NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailVM(id: character.id))) {
-                                CharacterListCellView(viewModel: character)
-                            }
-                        }
-                        if !viewModel.charactersResult.isEmpty {
-                            ProgressView()
-                                .onAppear {
-                                    viewModel.getCharacters()
-                                }
-                        }
-                    }
-                    .navigationDestination(for: Color.self) { color in
-                    }
-                }
-                .padding(EdgeInsets(top: 0, leading: 30 , bottom: 0, trailing: 30))
-                .refreshable {
-                    viewModel.refresh()
-                }
+            }
+            .refreshable {
+                viewModel.refresh()
             }
         }
         .accentColor(.black)

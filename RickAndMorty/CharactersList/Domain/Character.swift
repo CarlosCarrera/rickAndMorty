@@ -41,15 +41,4 @@ struct Character {
         self.location = characterDto.location.name
         self.imagePath = characterDto.image
     }
-    
-    init(from characterMO: CharacterMO) {
-        self.id = Int(characterMO.id)
-        self.name = characterMO.name
-        self.gender = characterMO.gender
-        self.status = characterMO.status
-        self.species = characterMO.species
-        self.origin = characterMO.origin
-        self.location = characterMO.location
-        self.imagePath = characterMO.imagePath
-    }
 }

@@ -13,11 +13,8 @@ class CharctersServiceTests: XCTestCase {
     
     func testGetCharacters() async throws {
         let repository = PaginatedDataRepositoryMock()
-        let database = DatabaseManagerMock()
-        sut = CharactersService(repository: repository, database: database)
+        sut = CharactersService(repository: repository)
         let result = try await sut.getCharacters(page: 1)
-        
-        XCTAssert(database.saveCharactersCalled)
         XCTAssertNotNil(result)
     }
 }
@@ -33,21 +30,5 @@ class PaginatedDataRepositoryMock: PaginatedDataRepositoryInterface {
                                         image: "", episode: [], url: "", created: "")
         
         return PaginatedResultDto(info: PaginatedRequestInfoDto(count: 1, pages: 20, next: "", prev: nil), results: [characterDto])
-    }
-}
-
-class DatabaseManagerMock: DataManagerInterface {
-    var saveCharactersCalled = false
-    
-    func fetchCharacter(id: Int) async throws -> RickAndMorty.CharacterMO {
-        fatalError()
-    }
-    
-    func fetchCharacters() async throws -> [RickAndMorty.CharacterMO] {
-        return []
-    }
-    
-    func saveCharacters(characters: [RickAndMorty.CharacterDto]) async throws {
-        saveCharactersCalled = true
     }
 }
